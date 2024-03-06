@@ -172,6 +172,7 @@ SystemState determineSystemState (SystemState state){
     case RESETTING:
       setHue(BULB, HIGH, HueViolet, 255, 255);
       pixelFill(0, PIXELCOUNT, purple); 
+      wemoWrite(WEMO5, LOW);
       display.drawBitmap(0, 10, dtLogo, 64, 64, WHITE);
       displayNotification("System Resetting....");
      if(resetTimer.isTimerReady()){
@@ -179,7 +180,8 @@ SystemState determineSystemState (SystemState state){
       }
     break;
     case CAUTION:
-      setHue(BULB, HIGH, HueYellow, 255, 255);
+      wemoWrite(WEMO5, HIGH);
+      setHue(BULB, HIGH, HueYellow, random(32, 255), 255);
       pixelFill(0, PIXELCOUNT, yellow); 
       displayNotification("Caution - Person Near Door");
       distance = getDistance();
@@ -193,7 +195,8 @@ SystemState determineSystemState (SystemState state){
       
     break;
     case WARNING:
-      setHue(BULB, HIGH, HueOrange, 255, 255);
+      wemoWrite(WEMO5, HIGH);
+      setHue(BULB, HIGH, HueOrange, random(32, 255), 255);
       pixelFill(0, PIXELCOUNT, 0XD24E01); 
       displayNotification("Warning - Person Turning Door Knob");
       distance = getDistance();
@@ -208,7 +211,8 @@ SystemState determineSystemState (SystemState state){
 
     break;
     case EMERGENCY:
-      setHue(BULB, HIGH, HueRed, 255, 255);
+      wemoWrite(WEMO5, HIGH);
+      setHue(BULB, HIGH, HueRed, random(32, 255), 255);
       pixel.clear();
       displayNotification("Emergency - Person Opened Door");
       pixelFill(0, PIXELCOUNT, red); 
@@ -234,6 +238,10 @@ void displayNotification(String message) {
 
 // Lights up a segment of the pixel strip
 void pixelFill(int startPixel, int endPixel, int hexColor){
+  if((hexColor != blue) && (hexColor != green) && (hexColor != purple)){
+    pixel.setBrightness(random(1, 255));
+  }
+  
   for(int i = startPixel; i < endPixel; i++){
     pixel.setPixelColor(i, hexColor);
     pixel.show();
