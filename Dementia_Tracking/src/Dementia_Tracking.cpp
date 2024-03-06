@@ -1,9 +1,9 @@
 /* 
- * Project myProject
- * Author: Your Name
- * Date: 
- * For comprehensive documentation and examples, please visit:
- * https://docs.particle.io/firmware/best-practices/firmware-template/
+ * Project Smart Room Controller - IoT midterm
+ * Description: Code to monitor a door to sense when a person 
+ *              with dementia is trying to get outside 
+ * Author: Kathryn Perry
+ * Date: March 4, 2024
  */
 
 // Include Particle Device OS APIs
@@ -57,7 +57,7 @@ float getDistance();
 // Variables
 SystemState systemState = SAFE;
 
-// 'Unknown-2', 64x64px
+// System Logo
 const unsigned char dtLogo [] = {
 	0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 
 	0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 
@@ -141,6 +141,7 @@ void loop() {
 
 }
 
+// Determines what state the system is in and what event to perform
 SystemState determineSystemState (SystemState state){
   float distance;
   int hallValue, motionValue;
@@ -160,7 +161,7 @@ SystemState determineSystemState (SystemState state){
       wemoWrite(WEMO5, LOW);
       setHue(BULB, HIGH, HueGreen, 255, 255);
       pixelFill(0, PIXELCOUNT, green); 
-      displayNotification("Safe - Person Safe");
+      displayNotification("Safe \n\n\t Person Safe");
       distance = getDistance();
       if((distance > 3) || (distance < 0)){
         state = SAFE;
@@ -183,7 +184,7 @@ SystemState determineSystemState (SystemState state){
       wemoWrite(WEMO5, HIGH);
       setHue(BULB, HIGH, HueYellow, random(32, 255), 255);
       pixelFill(0, PIXELCOUNT, yellow); 
-      displayNotification("Caution - Person Near Door");
+      displayNotification("Caution \n\n\t Person Near Door");
       distance = getDistance();
       hallValue = digitalRead(HALLPIN);
       if((distance > 0 && distance <= 3) && hallValue == LOW){ // CHANGE BACK TO 36
@@ -198,7 +199,7 @@ SystemState determineSystemState (SystemState state){
       wemoWrite(WEMO5, HIGH);
       setHue(BULB, HIGH, HueOrange, random(32, 255), 255);
       pixelFill(0, PIXELCOUNT, 0XD24E01); 
-      displayNotification("Warning - Person Turning Door Knob");
+      displayNotification("Warning \n\n\t Person Turning Door Knob");
       distance = getDistance();
       motionValue = digitalRead(MOTIONPIN);
       hallValue = digitalRead(HALLPIN);
@@ -214,7 +215,7 @@ SystemState determineSystemState (SystemState state){
       wemoWrite(WEMO5, HIGH);
       setHue(BULB, HIGH, HueRed, random(32, 255), 255);
       pixel.clear();
-      displayNotification("Emergency - Person Opened Door");
+      displayNotification("Emergency \n\n\t Person Opened Door");
       pixelFill(0, PIXELCOUNT, red); 
       wemoWrite(WEMO5, HIGH);
     break;
@@ -226,8 +227,8 @@ SystemState determineSystemState (SystemState state){
   return state; 
 }
 
+// Displays notifications to OLED
 void displayNotification(String message) {
-  //display.clearDisplay();
   display.setTextSize(TEXTSIZE);
   display.setTextColor(WHITE);
   display.setCursor(0,0);
@@ -236,7 +237,7 @@ void displayNotification(String message) {
 }
  
 
-// Lights up a segment of the pixel strip
+// Lights up a segment of the pixel strip while randomly changing brightness for a blinking affect
 void pixelFill(int startPixel, int endPixel, int hexColor){
   if((hexColor != blue) && (hexColor != green) && (hexColor != purple)){
     pixel.setBrightness(random(1, 255));
@@ -248,7 +249,7 @@ void pixelFill(int startPixel, int endPixel, int hexColor){
   }
 }
 
- // Reads the ultrasonic sensor and converts the value into inches
+// Reads the ultrasonic sensor and converts the value into inches
 float getDistance(){
   
   float value = analogRead(ULTRASONIC);
