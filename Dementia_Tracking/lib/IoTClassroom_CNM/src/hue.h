@@ -24,8 +24,8 @@
 
 
 // Hue Configuration
-const char hueHubIP[] = "192.168.1.5";       // Hue hub IP
-const char hueUsername[] = "MQlZziRO0Wai5MsMHll8xAUAQqw85Qrr8tM37F3T";
+const char hueHubIP[] = "192.168.12.114";       // Hue hub IP
+const char hueUsername[] = "Rtfa1MeQ0MSfjWbzcv7-l3LqrUjWTUMgijeCBgJS";
 const int hueHubPort = 80;   // HTTP: 80, HTTPS: 443, HTTP-PROXY: 8080
 
 //  Hue variables

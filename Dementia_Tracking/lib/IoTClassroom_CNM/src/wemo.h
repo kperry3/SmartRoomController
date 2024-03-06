@@ -13,7 +13,7 @@
 TCPClient WemoClient;
 
 int wemoPort = 49153;
-const char *wemoIP[6] = {"192.168.1.30","192.168.1.31","192.168.1.32","192.168.1.33","192.168.1.34","192.168.1.35"};
+const char *wemoIP[6] = {"192.168.1.30","192.168.1.31","192.168.1.32","192.168.1.33","192.168.1.34", "192.168.12.135"};
 
 // Function Prototypes
 void switchON(int wemo);
