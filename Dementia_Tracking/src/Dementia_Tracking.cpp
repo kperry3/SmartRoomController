@@ -34,7 +34,7 @@ const int WEMO5 = 5;
 Adafruit_SSD1306 display(OLED_RESET);
 Adafruit_NeoPixel pixel(PIXELCOUNT, SPI1, WS2812B);  
 Button onOffButton(BUTTON1);
-Button resetButton1(BUTTON2);
+Button resetButton1(BUTTON2); 
 Button resetButton2(BUTTON3);
 IoTTimer resetTimer;
 
@@ -113,6 +113,7 @@ void setup() {
 
   // OLED
   display.begin(SSD1306_SWITCHCAPVCC, 0x3C);
+   display.setRotation(2);
   display.clearDisplay();
 
   // Neopixels
@@ -124,7 +125,6 @@ void setup() {
 void loop() {
   // Read Buttons
   if(onOffButton.isPressed()){
-    Serial.printf("Button pressed!!\n\n\n");
     if(systemState != OFF){
      systemState = OFF;
     }
@@ -150,9 +150,7 @@ SystemState determineSystemState (SystemState state){
   switch(state){
     case OFF:
       wemoWrite(WEMO5, LOW);
-
       setHue(BULB, HIGH, HueBlue, 255, 255);
-
       pixelFill(0, PIXELCOUNT, blue);
       display.drawBitmap(0, 10, dtLogo, 64, 64, WHITE);
       displayNotification("System Off");
@@ -163,10 +161,10 @@ SystemState determineSystemState (SystemState state){
       pixelFill(0, PIXELCOUNT, green); 
       displayNotification("Safe \n\n\t Person Safe");
       distance = getDistance();
-      if((distance > 3) || (distance < 0)){
+      if((distance > 24) || (distance < 0)){
         state = SAFE;
       }
-      else if((distance > 0 && distance <= 3)) {
+      else if((distance > 0 && distance <= 24)) {
         state = CAUTION;
       }
     break;
@@ -187,10 +185,10 @@ SystemState determineSystemState (SystemState state){
       displayNotification("Caution \n\n\t Person Near Door");
       distance = getDistance();
       hallValue = digitalRead(HALLPIN);
-      if((distance > 0 && distance <= 3) && hallValue == LOW){ // CHANGE BACK TO 36
+      if((distance > 0 && distance <= 24) && hallValue == LOW){ 
         state = WARNING;
       }
-      else if((distance > 3) || (distance < 0)){
+      else if((distance > 24) || (distance < 0)){
         state = SAFE;
       }
       
@@ -209,7 +207,6 @@ SystemState determineSystemState (SystemState state){
       else if (hallValue == HIGH){
         state = CAUTION;
       }
-
     break;
     case EMERGENCY:
       wemoWrite(WEMO5, HIGH);
@@ -236,9 +233,9 @@ void displayNotification(String message) {
   display.display();
 }
  
-
 // Lights up a segment of the pixel strip while randomly changing brightness for a blinking affect
 void pixelFill(int startPixel, int endPixel, int hexColor){
+  // Only want blinking if there is an issue
   if((hexColor != blue) && (hexColor != green) && (hexColor != purple)){
     pixel.setBrightness(random(1, 255));
   }
