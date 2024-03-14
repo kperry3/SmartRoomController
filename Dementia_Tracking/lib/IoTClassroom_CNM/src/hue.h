@@ -56,7 +56,7 @@ bool setHue(int lightNum, bool HueOn, int HueColor, int HueBright, int HueSat) {
   String command = "";  
 
   if((lightNum==PrevLightNum)&&(HueOn==PrevOn)&&(HueColor==PrevColor)&&(HueBright==PrevBright)&&(HueSat==PrevSat)) {
-    Serial.printf("No Change - Cancelling CMD\n");
+   // Serial.printf("No Change - Cancelling CMD\n");
     return false;
   }
   PrevLightNum = lightNum;
@@ -85,7 +85,7 @@ bool setHue(int lightNum, bool HueOn, int HueColor, int HueBright, int HueSat) {
     //{
       // Serial.println("Sending Command to Hue");
       // Serial.println(command);
-      Serial.printf("Sending Command to Hue: %s\n",command.c_str());
+     // Serial.printf("Sending Command to Hue: %s\n",command.c_str());
       HueClient.print("PUT /api/");
       HueClient.print(hueUsername);
       HueClient.print("/lights/");

@@ -37,7 +37,7 @@ void switchON(int wemo) {
   
   String data1;
   
-  Serial.printf("Switching On Wemo #%i\n",wemo);
+  //Serial.printf("Switching On Wemo #%i\n",wemo);
   data1+="<?xml version=\"1.0\" encoding=\"utf-8\"?><s:Envelope xmlns:s=\"http://schemas.xmlsoap.org/soap/envelope/\" s:encodingStyle=\"http://schemas.xmlsoap.org/soap/encoding/\"><s:Body><u:SetBinaryState xmlns:u=\"urn:Belkin:service:basicevent:1\"><BinaryState>1</BinaryState></u:SetBinaryState></s:Body></s:Envelope>"; // Use HTML encoding for comma's
   if (WemoClient.connect(wemoIP[wemo],wemoPort)) {
         WemoClient.println("POST /upnp/control/basicevent1 HTTP/1.1");

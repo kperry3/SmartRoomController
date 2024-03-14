@@ -113,7 +113,8 @@ void setup() {
 
   // OLED
   display.begin(SSD1306_SWITCHCAPVCC, 0x3C);
-   display.setRotation(2);
+  //display.setRotation(2);
+  display.setRotation(0);
   display.clearDisplay();
 
   // Neopixels
@@ -161,10 +162,14 @@ SystemState determineSystemState (SystemState state){
       pixelFill(0, PIXELCOUNT, green); 
       displayNotification("Safe \n\n\t Person Safe");
       distance = getDistance();
-      if((distance > 24) || (distance < 0)){
+      motionValue = digitalRead(MOTIONPIN);
+      if(motionValue == HIGH){
+        state = EMERGENCY;
+      }
+    if((distance > 6) || (distance < 0)){
         state = SAFE;
       }
-      else if((distance > 0 && distance <= 24)) {
+      else if((distance > 1) && (distance <= 6)) {
         state = CAUTION;
       }
     break;
@@ -184,11 +189,15 @@ SystemState determineSystemState (SystemState state){
       pixelFill(0, PIXELCOUNT, yellow); 
       displayNotification("Caution \n\n\t Person Near Door");
       distance = getDistance();
+      motionValue = digitalRead(MOTIONPIN);
       hallValue = digitalRead(HALLPIN);
-      if((distance > 0 && distance <= 24) && hallValue == LOW){ 
+      if(motionValue == HIGH){
+        state = EMERGENCY;
+      }
+      if((distance > 0 && distance <= 6) && hallValue == LOW){ 
         state = WARNING;
       }
-      else if((distance > 24) || (distance < 0)){
+      else if((distance > 6) || (distance <= 0)){
         state = SAFE;
       }
       
